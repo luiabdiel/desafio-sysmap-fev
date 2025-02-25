@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: ms-customer-v1
+
+  # POSTGRESQL
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_customer
+    username: root
+    password: pass
+
+  # JPA
+  jpa:
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  # KAFKA
+  kafka:
+    bootstrap-servers: localhost:9092
+
+kafka:
+  topic:
+    partitions: 1
+    replication-factor: 1
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1/

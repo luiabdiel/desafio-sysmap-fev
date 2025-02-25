@@ -1,0 +1,28 @@
+spring:
+  application: name=ms-email-v1
+  # MAILTRAP
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 0396def3b6a080
+    password: 172cd143add250
+    properties:
+      email:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  # KAFKA
+  kafka:
+    bootstrap-servers: localhost:9092
+
+kafka:
+  topic:
+    partitions: 1
+    replication-factor: 1
+
+server:
+  port: 8082
+  servlet:
+    context-path: /api/v1
