@@ -81,7 +81,7 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
 - **E-mail:** desafio.trainee.sysmap@gmail.com
 - **Senha:** RoSr7@mfRoSr7@m
 
-**Importante:** Essa conta do Mailtrap foi criada **especificamente para este projeto e não é uma conta pessoal**. Ela é destinada apenas para o envio e visualização dos e-mails de boas-vindas. As credenciais fornecidas são usadas para acessar o sistema do Mailtrap e visualizar os e-mails na caixa de e-mails.
+  **Importante:** Essa conta do Mailtrap foi criada **especificamente para este projeto e não é uma conta pessoal**. Ela é destinada apenas para o envio e visualização dos e-mails de boas-vindas. As credenciais fornecidas são usadas para acessar o sistema do Mailtrap e visualizar os e-mails na caixa de e-mails.
 
 ## 💍 Endpoints Principais
 
