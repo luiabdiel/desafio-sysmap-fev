@@ -4,6 +4,7 @@ import br.com.luiabdiel.ms_customer_v1.core.domain.entity.CustomerEntity;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.kafka.producer.CustomerProducer;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.persistence.CustomerIntegrator;
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.DataIntegratyViolationException;
+import br.com.luiabdiel.ms_customer_v1.shared.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -129,6 +130,20 @@ class CustomerServiceTest {
         verify(this.customerPortOut, times(1)).findAll(pageable);
         assertNotNull(customers);
         assertEquals(expectedId, customers.getContent().get(0).getId());
+    }
+
+    @Test
+    void shouldThrowObjectNotFoundExceptionWhenCustomerNotFound() {
+        var expectedId = 1L;
+
+        when(this.customerPortOut.findById(expectedId)).thenReturn(Optional.empty());
+
+        ObjectNotFoundException thrownException = assertThrows(ObjectNotFoundException.class, () -> {
+            this.customerService.findById(expectedId);
+        });
+
+        assertEquals("Customer not found", thrownException.getMessage());
+        verify(this.customerPortOut, times(1)).findById(expectedId);
     }
 
     @Test
