@@ -34,7 +34,7 @@ public class CustomerControllerImpl implements CustomerController {
                 .buildAndExpand(this.customerPortIn.create(customerEntity).getId())
                 .toUri();
 
-        log.info("[CONTROLLER - CustomerControllerImpl.create] - Cliente criado com sucesso. ID: {}", customerEntity.getId());
+        log.info("[CONTROLLER - CustomerControllerImpl.create] - Cliente criado com sucesso.");
         return ResponseEntity.created(uri).build();
     }
 
