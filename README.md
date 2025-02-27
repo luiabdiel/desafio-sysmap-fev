@@ -76,7 +76,12 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
              enable: true
    ```
 
-   **Observação:** As credenciais fornecidas no repositório são da minha conta pessoal. Caso queira receber os e-mails em sua própria conta Mailtrap, substitua o `username` e `password` pelas credenciais de sua conta.
+   **Observação:** As credenciais para acessar o sistema do Mailtrap (para visualizar a caixa de e-mails) são as seguintes:
+   
+- **E-mail:** desafio.trainee.sysmap@gmail.com
+- **Senha:** RoSr7@mfRoSr7@m
+
+**Importante:** Essa conta do Mailtrap foi criada **especificamente para este projeto e não é uma conta pessoal**. Ela é destinada apenas para o envio e visualização dos e-mails de boas-vindas. As credenciais fornecidas são usadas para acessar o sistema do Mailtrap e visualizar os e-mails na caixa de e-mails.
 
 ## 💍 Endpoints Principais
 
@@ -96,6 +101,11 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
 
 - Envio de e-mail de boas-vindas ao criar um cliente via Mailtrap.
 
+## 📑 Swagger para Documentação de Endpoints
+Os microsserviços **ms-audit-v1** e **ms-customer-v1** possuem documentação pelo Swagger.
+
+- **ms-customer-v1** - http://localhost:8080/api/v1/swagger-ui/index.html#/
+- **ms-audit-v1** - http://localhost:8081/api/v1/swagger-ui/index.html#/
 ## 💡 Dúvidas ou sugestões?
 
 Entre em contato!
