@@ -19,22 +19,9 @@ public class EmailService implements EmailPortIn {
 
     private final JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.username:}")
-    private String mailUsername;
-
-    @Value("${spring.mail.password:}")
-    private String mailPassword;
-
     @Override
     public void sendEmail(EmailDto emailDto) {
         log.info("[PORT IN - EmailService.sendEmail] - Iniciando o envio de e-mail para {}", emailDto.getTo());
-
-        if (mailUsername.isEmpty() || mailPassword.isEmpty()) {
-            log.warn("[PORT IN - EmailService.sendEmail] - Credenciais de e-mail não configuradas. E-mail não será enviado.");
-            log.info("[PORT IN - EmailService.sendEmail] - Simulando envio de e-mail para {}", emailDto.getTo());
-
-            return;
-        }
 
         MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
 
