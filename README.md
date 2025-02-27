@@ -79,7 +79,7 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
    **Observação:** As credenciais para acessar o sistema do Mailtrap (para visualizar a caixa de e-mails) são as seguintes:
    
 - **E-mail:** desafio.trainee.sysmap@gmail.com
-- **Senha:** RoSr7@mfRoSr7@m
+- **Senha:** RoSr7@mfRoSr7@mf
 
   **Importante:** Essa conta do Mailtrap foi criada **especificamente para este projeto e não é uma conta pessoal**. Ela é destinada apenas para o envio e visualização dos e-mails de boas-vindas. As credenciais fornecidas são usadas para acessar o sistema do Mailtrap e visualizar os e-mails na caixa de e-mails.
 
