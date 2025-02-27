@@ -41,8 +41,8 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/seu-repositorio.git
-   cd seu-repositorio
+   git clone https://github.com/luiabdiel/desafio-sysmap-fev.git
+   cd desafio-sysmap-fev
    ```
 
 2. Inicie os serviços com Docker Compose:
