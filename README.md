@@ -106,6 +106,10 @@ Os microsserviços **ms-audit-v1** e **ms-customer-v1** possuem documentação p
 
 - **ms-customer-v1** - http://localhost:8080/api/v1/swagger-ui/index.html#/
 - **ms-audit-v1** - http://localhost:8081/api/v1/swagger-ui/index.html#/
+
+## 📚 Evidências
+As evidências do projeto estão documentadas na [Wiki do repositório](https://github.com/luiabdiel/desafio-sysmap-fev/wiki/Sistema-de-Gest%C3%A3o-de-Clientes-com-Kafka).
+
 ## 💡 Dúvidas ou sugestões?
 
 Entre em contato!
