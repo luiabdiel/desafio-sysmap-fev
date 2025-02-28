@@ -1,5 +1,3 @@
-# Sistema de Gestão de Clientes com Kafka
-
 ## 📌 Visão Geral
 
 Este projeto consiste em um sistema distribuído de gestão de clientes com comunicação assíncrona via Apache Kafka. O sistema é composto por três microsserviços principais:
