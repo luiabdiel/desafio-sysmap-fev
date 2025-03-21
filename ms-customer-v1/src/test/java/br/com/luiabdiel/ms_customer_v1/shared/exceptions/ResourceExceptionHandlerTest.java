@@ -22,6 +22,7 @@ class ResourceExceptionHandlerTest {
 
     private static final String EXPECTED_ERROR_NOT_FOUND = "Resource not found";
     private static final String EXPECTED_ERROR_DATA_INTEGRITY = "Data integrity violation";
+    private static final String EXPECTED_ERROR_UNAUTHORIZED = "Invalid credentials";
 
     @BeforeEach
     void setUp() {
@@ -48,6 +49,18 @@ class ResourceExceptionHandlerTest {
 
         assertNotNull(dataIntegrityViolationException);
         assertNotNull(dataIntegrityViolationException.getBody());
+
+        verify(request, times(1)).getRequestURI();
+    }
+
+    @Test
+    void shouldHandleUnauthorizedExceptionSuccessfully() {
+        var exception = new UnauthorizedException(EXPECTED_ERROR_UNAUTHORIZED);
+
+        ResponseEntity<StandarError> unauthorizedException = this.resourceExceptionHandler.unauthorizedException(exception, request);
+
+        assertNotNull(unauthorizedException);
+        assertNotNull(unauthorizedException.getBody());
 
         verify(request, times(1)).getRequestURI();
     }
