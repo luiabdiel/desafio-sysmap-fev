@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -87,7 +88,7 @@ public interface CustomerController {
                             description = "Lista de clientes recuperada com sucesso",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Page.class)
+                                    schema = @Schema(implementation = CustomerResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -98,7 +99,7 @@ public interface CustomerController {
             }
     )
     @GetMapping(value = "/customers")
-    ResponseEntity<Page<CustomerResponseDto>> findAll(Pageable pageable);
+    ResponseEntity<Page<CustomerResponseDto>> findAll(@ParameterObject Pageable pageable);
 
     @Operation(
             summary = "Atualiza um cliente",

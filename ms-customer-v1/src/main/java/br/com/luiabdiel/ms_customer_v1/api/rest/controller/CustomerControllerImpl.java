@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class CustomerControllerImpl implements CustomerController {
     }
 
     @Override
-    public ResponseEntity<Page<CustomerResponseDto>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<CustomerResponseDto>> findAll(@ParameterObject Pageable pageable) {
         log.info("[CONTROLLER - CustomerControllerImpl.findAll] - Buscando todos os clientes com paginação");
         Page<CustomerEntity> customerEntities = this.customerPortIn.findAll(pageable);
 
