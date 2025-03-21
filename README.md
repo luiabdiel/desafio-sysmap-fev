@@ -2,7 +2,7 @@
 
 Este projeto consiste em um sistema distribuído de gestão de clientes com comunicação assíncrona via Apache Kafka. O sistema é composto por três microsserviços principais:
 
-- **ms-customer-v1**: Responsável pelo CRUD de clientes e pela publicação de eventos no Kafka.
+- **ms-customer-v1**: Responsável pelo CRUD de clientes, autenticação de usuários e publicação de eventos no Kafka.
 - **ms-audit-v1**: Consome eventos do Kafka e mantém um histórico de auditoria.
 - **ms-email-v1**: Consome eventos de criação de clientes e envia e-mails via Mailtrap.
 
@@ -14,10 +14,21 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
 
 ## 👍 Fluxo de Comunicação
 
-1. Cliente realiza uma requisição HTTP no **ms-customer-v1** (criação, atualização ou exclusão de um cliente).
+1. Cliente realiza uma requisição HTTP no **ms-customer-v1** (criação, atualização ou exclusão de um cliente). Para isso, é necessário estar autenticado.
 2. **ms-customer-v1** persiste os dados no banco e publica um evento no Kafka.
 3. **ms-audit-v1** consome o evento e armazena os detalhes da ação para auditoria.
 4. **ms-email-v1** consome o evento de criação de cliente e envia um e-mail de boas-vindas via Mailtrap.
+
+## 🔐 Autenticação e Segurança
+
+O **ms-customer-v1** implementa autenticação via **JWT (JSON Web Token)**. Para criar, listar, buscar por ID, atualizar e remover clientes, é necessário estar autenticado.
+
+### Rotas de Autenticação
+
+- `POST /api/v1/auth/register` - Registrar um novo usuário.
+- `POST /api/v1/auth/login` - Autenticar um usuário e obter um token JWT.
+
+Após o login, as requisições devem incluir o token JWT no cabeçalho `Authorization` como `Bearer <TOKEN>`
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -26,6 +37,7 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
 - **PostgreSQL**: Banco de dados para persistência de dados.
 - **Docker e Docker Compose**: Orquestração dos microsserviços.
 - **Mailtrap**: Serviço para testar e-mails em ambiente de desenvolvimento.
+- **JWT** (JSON Web Token): Autenticação segura.
 
 ## 🚀 Como Executar o Projeto
 
@@ -83,7 +95,7 @@ O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagona
 
 ## 💍 Endpoints Principais
 
-### **ms-customer-v1 (Gestão de Clientes)**
+### **ms-customer-v1 (Gestão de Clientes - Requer Autenticação)**
 
 - `POST /api/v1/customers` - Criar um cliente.
 - `GET /api/v1/customers` - Listar todos os clientes.
