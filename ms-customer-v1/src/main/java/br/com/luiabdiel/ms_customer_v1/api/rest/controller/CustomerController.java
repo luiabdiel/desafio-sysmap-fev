@@ -34,6 +34,11 @@ public interface CustomerController {
                             )
                     ),
                     @ApiResponse(
+                            responseCode = "403",
+                            description = "Acesso negado. O usuário não tem permissão para acessar este recurso.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
                             responseCode = "409",
                             description = "E-mail já cadastrado no sistema.",
                             content = @Content
@@ -61,6 +66,11 @@ public interface CustomerController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = CustomerResponseDto.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Acesso negado. O usuário não tem permissão para acessar este recurso.",
+                            content = @Content
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -92,6 +102,11 @@ public interface CustomerController {
                             )
                     ),
                     @ApiResponse(
+                            responseCode = "403",
+                            description = "Acesso negado. O usuário não tem permissão para acessar este recurso.",
+                            content = @Content
+                    ),
+                    @ApiResponse(
                             responseCode = "500",
                             description = "Erro interno do servidor ao processar a solicitação.",
                             content = @Content
@@ -115,6 +130,11 @@ public interface CustomerController {
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = CustomerResponseDto.class)
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Acesso negado. O usuário não tem permissão para acessar este recurso.",
+                            content = @Content
                     ),
                     @ApiResponse(
                             responseCode = "404",
@@ -147,6 +167,11 @@ public interface CustomerController {
                     @ApiResponse(
                             responseCode = "204",
                             description = "Cliente excluído com sucesso",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Acesso negado. O usuário não tem permissão para acessar este recurso.",
                             content = @Content
                     ),
                     @ApiResponse(
