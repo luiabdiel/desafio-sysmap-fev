@@ -6,6 +6,7 @@ import br.com.luiabdiel.ms_audit_v1.core.domain.port.out.dto.AuditResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class AuditControllerImpl implements AuditController {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<Page<AuditResponseDto>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<AuditResponseDto>> findAll(@ParameterObject Pageable pageable) {
         log.info("[CONTROLLER - AuditControllerImpl.findAll] - Buscando todos as auditorias com paginação");
         Page<AuditCustomerEntity> auditCustomerEntities = this.auditPortIn.findAll(pageable);
 
