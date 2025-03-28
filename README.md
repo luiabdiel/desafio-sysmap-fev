@@ -93,6 +93,9 @@ Após o login, as requisições devem incluir o token JWT no cabeçalho `Authori
 
   **Importante:** Essa conta do Mailtrap foi criada **especificamente para este projeto e não é uma conta pessoal**. Ela é destinada apenas para o envio e visualização dos e-mails de boas-vindas. As credenciais fornecidas são usadas para acessar o sistema do Mailtrap e visualizar os e-mails na caixa de e-mails.
 
+  **Atenção:**
+  Para acessar o Mailtrap, recomendamos que você faça login na conta do Gmail primeiro e, em seguida, acesse o Mailtrap. Isso ocorre porque, ao tentar entrar diretamente com e-mail e senha, o Mailtrap pode solicitar um código de verificação. Como as credenciais do Mailtrap são as mesmas da conta do Gmail, basta logar no Gmail primeiro e depois acessar o Mailtrap normalmente.
+
 ## 💍 Endpoints Principais
 
 ### **ms-customer-v1 (Gestão de Clientes - Requer Autenticação)**
