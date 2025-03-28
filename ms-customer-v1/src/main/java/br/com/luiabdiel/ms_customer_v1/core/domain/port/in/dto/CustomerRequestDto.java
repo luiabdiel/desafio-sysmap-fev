@@ -14,8 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerRequestDto {
-    
-    private Long id;
 
     @NotBlank(message = "Nome não pode ser vazio")
     @Size(min = 2, max = 100, message = "O nome deve ter entre 2 e 100 caracteres")
@@ -24,9 +22,4 @@ public class CustomerRequestDto {
     @NotBlank(message = "Email não pode ser vazio")
     @Email(message = "Email inválido")
     private String email;
-
-    public CustomerRequestDto(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
 }
