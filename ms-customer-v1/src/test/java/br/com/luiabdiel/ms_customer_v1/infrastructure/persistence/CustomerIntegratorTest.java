@@ -73,7 +73,6 @@ class CustomerIntegratorTest {
         );
 
         when(this.customerRepository.save(any())).thenReturn(customerEntity);
-        CustomerEntity customer = this.customerIntegrator.save(customerEntity);
 
         verify(this.customerRepository, times(1))
                 .save(argThat(arg ->

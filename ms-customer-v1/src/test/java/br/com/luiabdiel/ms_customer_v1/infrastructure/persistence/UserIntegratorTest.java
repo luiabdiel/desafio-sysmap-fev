@@ -60,7 +60,6 @@ class UserIntegratorTest {
         UserEntity userEntity = new UserEntity(expectedUsername, expectedPassword);
 
         when(this.userRepository.save(any())).thenReturn(userEntity);
-        UserEntity user = this.userPortOut.save(userEntity);
 
         verify(this.userRepository, times(1))
                 .save(argThat(arg ->
