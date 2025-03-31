@@ -61,9 +61,11 @@ public class CustomerService implements CustomerPortIn {
     }
 
     @Override
-    public Page<CustomerEntity> findAll(Pageable pageable) {
+    public Page<CustomerResponseDto> findAll(Pageable pageable) {
         log.info("[PORT IN - CustomerService.findAll] - Buscando todos os clientes com paginação");
-        return this.customerPortOut.findAll(pageable);
+        Page<CustomerEntity> customerEntities = this.customerPortOut.findAll(pageable);
+
+        return customerEntities.map(entity -> this.modelMapper.map(entity, CustomerResponseDto.class));
     }
 
     @Override

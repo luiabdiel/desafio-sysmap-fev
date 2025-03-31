@@ -12,7 +12,7 @@ public interface CustomerPortIn {
 
     CustomerEntity findById(Long id);
 
-    Page<CustomerEntity> findAll(Pageable pageable);
+    Page<CustomerResponseDto> findAll(Pageable pageable);
 
     CustomerEntity update(Long id, CustomerEntity customerEntity);
 

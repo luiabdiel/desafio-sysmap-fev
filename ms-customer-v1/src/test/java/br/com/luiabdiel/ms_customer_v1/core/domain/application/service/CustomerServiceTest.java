@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -132,16 +131,28 @@ class CustomerServiceTest {
                 expectedName,
                 expectedEmail
         );
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto(
+                expectedId,
+                expectedName,
+                expectedEmail
+        );
 
         Page<CustomerEntity> expectedPage = new PageImpl<>(List.of(customerEntity));
         Pageable pageable = PageRequest.of(0, 10);
 
         when(this.customerPortOut.findAll(pageable)).thenReturn(expectedPage);
-        Page<CustomerEntity> customers = this.customerService.findAll(pageable);
+        doReturn(customerResponseDto).when(this.modelMapper).map(any(CustomerEntity.class), eq(CustomerResponseDto.class));
+
+        Page<CustomerResponseDto> customers = this.customerService.findAll(pageable);
 
         verify(this.customerPortOut, times(1)).findAll(pageable);
+        verify(this.modelMapper, atLeastOnce()).map(any(CustomerEntity.class), eq(CustomerResponseDto.class));
+
         assertNotNull(customers);
+        assertEquals(1, customers.getTotalElements());
         assertEquals(expectedId, customers.getContent().get(0).getId());
+        assertEquals(expectedName, customers.getContent().get(0).getName());
+        assertEquals(expectedEmail, customers.getContent().get(0).getEmail());
     }
 
     @Test

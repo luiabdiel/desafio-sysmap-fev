@@ -91,29 +91,20 @@ class CustomerControllerImplTest {
         var expectedName = "rob";
         var expectedEmail = "rob@email.com";
 
-        CustomerEntity customerEntity = new CustomerEntity(
-                expectedId,
-                expectedName,
-                expectedEmail
-        );
         CustomerResponseDto customerResponseDto = new CustomerResponseDto(
                 expectedId,
                 expectedName,
                 expectedEmail
         );
 
-        Page<CustomerEntity> expectedPage = new PageImpl<>(List.of(customerEntity));
-        Page<CustomerResponseDto> expectedDtoPage = new PageImpl<>(List.of(customerResponseDto));
-
+        Page<CustomerResponseDto> expectedPage = new PageImpl<>(List.of(customerResponseDto));;
         Pageable pageable = PageRequest.of(0, 10);
 
         when(this.customerPortIn.findAll(pageable)).thenReturn(expectedPage);
-        when(this.modelMapper.map(any(CustomerEntity.class), eq(CustomerResponseDto.class))).thenReturn(customerResponseDto);
 
         ResponseEntity<Page<CustomerResponseDto>> response = this.customerController.findAll(pageable);
 
         verify(this.customerPortIn, times(1)).findAll(pageable);
-        verify(this.modelMapper, times(1)).map(any(CustomerEntity.class), eq(CustomerResponseDto.class));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

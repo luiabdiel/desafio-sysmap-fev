@@ -51,14 +51,11 @@ public class CustomerControllerImpl implements CustomerController {
     @Override
     public ResponseEntity<Page<CustomerResponseDto>> findAll(@ParameterObject Pageable pageable) {
         log.info("[CONTROLLER - CustomerControllerImpl.findAll] - Buscando todos os clientes com paginação");
-        Page<CustomerEntity> customerEntities = this.customerPortIn.findAll(pageable);
+        Page<CustomerResponseDto> customersResponseDto = this.customerPortIn.findAll(pageable);
 
-        Page<CustomerResponseDto> customerDto = customerEntities.map(
-                entity -> this.modelMapper.map(entity, CustomerResponseDto.class)
-        );
 
-        log.info("[CONTROLLER - CustomerControllerImpl.findAll] - Total de clientes encontrados: {}", customerDto.getTotalElements());
-        return ResponseEntity.ok().body(customerDto);
+        log.info("[CONTROLLER - CustomerControllerImpl.findAll] - Total de clientes encontrados: {}", customersResponseDto.getTotalElements());
+        return ResponseEntity.ok().body(customersResponseDto);
     }
 
     @Override
