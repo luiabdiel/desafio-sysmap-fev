@@ -2,6 +2,7 @@ package br.com.luiabdiel.ms_audit_v1.services;
 
 import br.com.luiabdiel.ms_audit_v1.core.domain.application.service.AuditService;
 import br.com.luiabdiel.ms_audit_v1.core.domain.entity.AuditCustomerEntity;
+import br.com.luiabdiel.ms_audit_v1.core.domain.port.out.dto.AuditResponseDto;
 import br.com.luiabdiel.ms_audit_v1.infrastructure.kafka.event.EventType;
 import br.com.luiabdiel.ms_audit_v1.infrastructure.persistence.AuditIntegrator;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,9 @@ class AuditServiceTest {
 
     @Mock
     private AuditIntegrator auditPortOut;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @Test
     void shouldSaveAuditCustomerEntitySuccessfully() {
@@ -92,14 +97,29 @@ class AuditServiceTest {
                 expectedEventType
         );
 
+        AuditResponseDto auditResponseDto = new AuditResponseDto(
+                expectedId,
+                expectedCustomerId,
+                expectedName,
+                expectedEmail,
+                expectedEventType
+        );
+
         Page<AuditCustomerEntity> expectedPage = new PageImpl<>(List.of(auditCustomerEntity));
         Pageable pageable = PageRequest.of(0, 10);
 
         when(this.auditPortOut.findAll(pageable)).thenReturn(expectedPage);
-        Page<AuditCustomerEntity> customers = this.auditService.findAll(pageable);
+        when(this.modelMapper.map(any(AuditCustomerEntity.class), eq(AuditResponseDto.class)))
+                .thenReturn(auditResponseDto);
+
+        Page<AuditResponseDto> customers = this.auditService.findAll(pageable);
 
         verify(this.auditPortOut, times(1)).findAll(pageable);
+        verify(this.modelMapper, times(1)).map(any(AuditCustomerEntity.class), eq(AuditResponseDto.class));
+
         assertNotNull(customers);
-        assertEquals(expectedId, customers.getContent().get(0).getId());
+        assertEquals(1, customers.getTotalElements());
+        assertEquals(expectedName, customers.getContent().get(0).getName());
+        assertEquals(expectedEmail, customers.getContent().get(0).getEmail());
     }
 }

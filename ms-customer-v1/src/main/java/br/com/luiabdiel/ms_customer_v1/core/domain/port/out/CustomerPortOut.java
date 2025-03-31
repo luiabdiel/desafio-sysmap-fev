@@ -4,7 +4,6 @@ import br.com.luiabdiel.ms_customer_v1.core.domain.entity.CustomerEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CustomerPortOut {
