@@ -14,7 +14,7 @@ public interface CustomerPortIn {
 
     Page<CustomerResponseDto> findAll(Pageable pageable);
 
-    CustomerEntity update(Long id, CustomerEntity customerEntity);
+    CustomerResponseDto update(Long id, CustomerRequestDto customerRequestDto);
 
     void deleteById(Long id);
 }

@@ -64,12 +64,10 @@ public class CustomerControllerImpl implements CustomerController {
             @RequestBody @Valid CustomerRequestDto customerRequestDto)
     {
         log.info("[CONTROLLER - CustomerControllerImpl.update] - Atualizando cliente ID: {}", id);
-        CustomerEntity customer = this.modelMapper.map(customerRequestDto, CustomerEntity.class);
-        CustomerEntity customerEntity = this.customerPortIn.update(id, customer);
-        CustomerResponseDto customerResponse = this.modelMapper.map(customerEntity, CustomerResponseDto.class);
+        CustomerResponseDto customerResponseDto = this.customerPortIn.update(id, customerRequestDto);
 
         log.info("[CONTROLLER - CustomerControllerImpl.update] - Cliente atualizado com sucesso. ID: {}", id);
-        return ResponseEntity.ok().body(customerResponse);
+        return ResponseEntity.ok().body(customerResponseDto);
     }
 
     @Override

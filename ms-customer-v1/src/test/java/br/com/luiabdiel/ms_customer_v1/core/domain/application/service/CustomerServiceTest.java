@@ -172,42 +172,67 @@ class CustomerServiceTest {
     @Test
     void shouldUpdateCustomerSuccessfully() {
         var expectedId = 1L;
+        var expectedOldName = "Rob";
+        var expectedNewName = "Robzin";
+        var expectedEmail = "rob@email.com";
 
-        CustomerEntity existingCustomer = new CustomerEntity(expectedId, "Rob", "rob@email.com");
-        CustomerEntity updatedCustomer = new CustomerEntity(expectedId, "Robzin", "rob@email.com");
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto(
+                expectedNewName,
+                expectedEmail
+        );
+        CustomerEntity existingCustomer = new CustomerEntity(
+                expectedId,
+                expectedOldName,
+                expectedEmail
+        );
+        CustomerEntity updatedCustomer = new CustomerEntity(
+                expectedId,
+                expectedNewName,
+                expectedEmail
+        );
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto(
+                expectedId,
+                expectedNewName,
+                expectedEmail
+        );
 
-        when(this.customerPortOut.findById(existingCustomer.getId())).thenReturn(Optional.of(existingCustomer));
-        when(this.customerPortOut.findByEmail(updatedCustomer.getEmail())).thenReturn(Optional.of(existingCustomer));
-        when(this.customerPortOut.save(existingCustomer)).thenReturn(updatedCustomer);
+        when(this.customerPortOut.findById(expectedId)).thenReturn(Optional.of(existingCustomer));
+        when(this.customerPortOut.findByEmail(expectedEmail)).thenReturn(Optional.of(existingCustomer));
+        when(this.customerPortOut.save(any(CustomerEntity.class))).thenReturn(updatedCustomer);
+        when(this.modelMapper.map(updatedCustomer, CustomerResponseDto.class)).thenReturn(customerResponseDto);
 
-        CustomerEntity customer = this.customerService.update(updatedCustomer.getId(), updatedCustomer);
+        CustomerResponseDto response = this.customerService.update(expectedId, customerRequestDto);
 
-        verify(this.customerPortOut, times(1)).findById(existingCustomer.getId());
-        verify(this.customerPortOut, times(1)).findByEmail(updatedCustomer.getEmail());
-        verify(this.customerPortOut, times(1)).save(existingCustomer);
+        verify(this.customerPortOut, times(1)).findById(expectedId);
+        verify(this.customerPortOut, times(1)).findByEmail(expectedEmail);
+        verify(this.customerPortOut, times(1)).save(any(CustomerEntity.class));
         verify(this.customerProducer, times(1)).sendCustomer(any());
-        assertNotNull(customer);
-        assertEquals(updatedCustomer.getName(), customer.getName());
+
+        assertNotNull(response);
+        assertEquals(expectedId, response.getId());
+        assertEquals(expectedNewName, response.getName());
+        assertEquals(expectedEmail, response.getEmail());
     }
 
     @Test
     void shouldThrowDataIntegratyViolationWhenEmailAlreadyRegisteredOnUpdate() {
         var expectedId = 1L;
 
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("Robzin", "caramelo@email.com");
         CustomerEntity existingCustomer = new CustomerEntity(expectedId, "Rob", "rob@email.com");
-        CustomerEntity updatedCustomer = new CustomerEntity(expectedId, "Robzin", "caramelo@email.com");
         CustomerEntity anotherCustomer = new CustomerEntity(2L, "Caramelo", "caramelo@email.com");
 
         when(this.customerPortOut.findById(expectedId)).thenReturn(Optional.of(existingCustomer));
-        when(this.customerPortOut.findByEmail(updatedCustomer.getEmail())).thenReturn(Optional.of(anotherCustomer));
+        when(this.customerPortOut.findByEmail(customerRequestDto.getEmail())).thenReturn(Optional.of(anotherCustomer));
 
         DataIntegratyViolationException thrownException = assertThrows(DataIntegratyViolationException.class, () -> {
-            this.customerService.update(expectedId, updatedCustomer);
+            this.customerService.update(expectedId, customerRequestDto);
         });
 
         assertEquals("Email already registered", thrownException.getMessage());
+
         verify(this.customerPortOut, times(1)).findById(expectedId);
-        verify(this.customerPortOut, times(1)).findByEmail(updatedCustomer.getEmail());
+        verify(this.customerPortOut, times(1)).findByEmail(customerRequestDto.getEmail());
         verify(this.customerPortOut, never()).save(any());
         verify(this.customerProducer, never()).sendCustomer(any());
     }

@@ -123,28 +123,17 @@ class CustomerControllerImplTest {
                 expectedName,
                 expectedEmail
         );
-
-        CustomerEntity customerEntity = new CustomerEntity(
-                expectedId,
-                expectedName,
-                expectedEmail
-        );
-
         CustomerResponseDto customerResponseDto = new CustomerResponseDto(
                 expectedId,
                 expectedName,
                 expectedEmail
         );
 
-        when(this.modelMapper.map(customerRequestDto, CustomerEntity.class)).thenReturn(customerEntity);
-        when(this.modelMapper.map(customerEntity, CustomerResponseDto.class)).thenReturn(customerResponseDto);
-        when(this.customerPortIn.update(eq(expectedId), any(CustomerEntity.class))).thenReturn(customerEntity);
+        when(this.customerPortIn.update(eq(expectedId), any())).thenReturn(customerResponseDto);
 
         ResponseEntity<CustomerResponseDto> response = this.customerController.update(expectedId, customerRequestDto);
 
-        verify(this.customerPortIn, times(1)).update(eq(expectedId), any(CustomerEntity.class));
-        verify(this.modelMapper, times(1)).map(customerRequestDto, CustomerEntity.class);
-        verify(this.modelMapper, times(1)).map(customerEntity, CustomerResponseDto.class);
+        verify(this.customerPortIn, times(1)).update(eq(expectedId), any());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -152,7 +141,6 @@ class CustomerControllerImplTest {
         assertEquals(expectedName, response.getBody().getName());
         assertEquals(expectedEmail, response.getBody().getEmail());
     }
-
 
     @Test
     void shouldDeleteCustomerSuccessfully() {

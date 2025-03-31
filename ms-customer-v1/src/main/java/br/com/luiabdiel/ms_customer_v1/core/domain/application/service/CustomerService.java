@@ -69,20 +69,20 @@ public class CustomerService implements CustomerPortIn {
     }
 
     @Override
-    public CustomerEntity update(Long id, CustomerEntity customerEntity) {
+    public CustomerResponseDto update(Long id, CustomerRequestDto customerRequestDto) {
         log.info("[PORT IN - CustomerService.update] - Atualizando cliente ID: {}", id);
         CustomerEntity customer = this.findById(id);
 
         this.customerPortOut.
-                findByEmail(customerEntity.getEmail())
+                findByEmail(customerRequestDto.getEmail())
                 .ifPresent(existingCustomer -> {
                     if(!existingCustomer.getId().equals(id)) {
                         throw new DataIntegratyViolationException("Email already registered");
                     }
                 });
 
-        customer.setName(customerEntity.getName());
-        customer.setEmail(customerEntity.getEmail());
+        customer.setName(customerRequestDto.getName());
+        customer.setEmail(customerRequestDto.getEmail());
 
         CustomerEntity savedCustomer = this.customerPortOut.save(customer);
 
@@ -94,7 +94,7 @@ public class CustomerService implements CustomerPortIn {
         ));
 
         log.info("[PORT IN - CustomerService.update] - Cliente atualizado com sucesso: {}", id);
-        return savedCustomer;
+        return this.modelMapper.map(savedCustomer, CustomerResponseDto.class);
     }
 
     @Override
