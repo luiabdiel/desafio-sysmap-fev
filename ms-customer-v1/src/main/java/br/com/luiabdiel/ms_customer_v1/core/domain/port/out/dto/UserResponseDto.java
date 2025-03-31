@@ -14,4 +14,8 @@ public class UserResponseDto {
     private Long id;
 
     private String username;
+
+    public UserResponseDto(String username) {
+        this.username = username;
+    }
 }

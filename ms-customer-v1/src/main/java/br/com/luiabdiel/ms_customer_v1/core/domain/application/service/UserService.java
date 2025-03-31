@@ -2,6 +2,7 @@ package br.com.luiabdiel.ms_customer_v1.core.domain.application.service;
 
 import br.com.luiabdiel.ms_customer_v1.core.domain.entity.UserEntity;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.UserPortIn;
+import br.com.luiabdiel.ms_customer_v1.core.domain.port.out.dto.UserResponseDto;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.persistence.UserIntegrator;
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.DataIntegratyViolationException;
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.ObjectNotFoundException;
@@ -9,6 +10,7 @@ import br.com.luiabdiel.ms_customer_v1.shared.exceptions.UnauthorizedException;
 import br.com.luiabdiel.ms_customer_v1.shared.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,10 @@ public class UserService implements UserPortIn {
 
     private final UserIntegrator userPortOut;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
-    public UserEntity registerUser(String username, String password) {
+    public UserResponseDto registerUser(String username, String password) {
         log.info("[PORT IN - UserService.registerUser] - Registrando usuário: {}", username);
         this.userPortOut.
                 findByUsername(username)
@@ -36,17 +39,19 @@ public class UserService implements UserPortIn {
         UserEntity savedUser = this.userPortOut.save(user);
 
         log.info("[PORT IN - UserService.registerUser] - Usuário registrado com sucesso: {}", savedUser.getUsername());
-        return savedUser;
+        return this.modelMapper.map(savedUser, UserResponseDto.class);
     }
 
     @Override
-    public UserEntity findByUsername(String username) {
+    public UserResponseDto findByUsername(String username) {
         log.info("[PORT IN - UserService.findByUsername] - Buscando usuário: {}", username);
-        return this.userPortOut.findByUsername(username)
+        UserEntity userEntity = this.userPortOut.findByUsername(username)
                                 .orElseThrow(() -> {
                                     log.error("[PORT IN - UserService.findByUsername] - Usuário não encontrado: {}", username);
                                     return new ObjectNotFoundException("User not found");
                                 });
+
+        return this.modelMapper.map(userEntity, UserResponseDto.class);
     }
 
     @Override

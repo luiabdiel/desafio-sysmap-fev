@@ -1,6 +1,7 @@
 package br.com.luiabdiel.ms_customer_v1.core.domain.application.service;
 
 import br.com.luiabdiel.ms_customer_v1.core.domain.entity.UserEntity;
+import br.com.luiabdiel.ms_customer_v1.core.domain.port.out.dto.UserResponseDto;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.persistence.UserIntegrator;
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.DataIntegratyViolationException;
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.ObjectNotFoundException;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -32,6 +34,9 @@ class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     @Test
     void shouldRegisterUserSuccessfully() {
         var expectedUsername = "robbor";
@@ -39,17 +44,18 @@ class UserServiceTest {
         var encryptedPassword = "encrypted_pass";
 
         UserEntity userEntity = new UserEntity(expectedUsername, encryptedPassword);
+        UserResponseDto userResponseDto = new UserResponseDto(expectedUsername);
 
         when(this.userPortOut.findByUsername(expectedUsername)).thenReturn(Optional.empty());
         when(this.passwordEncoder.encode(expectedPassword)).thenReturn(encryptedPassword);
-        when(this.userPortOut.save(any(UserEntity.class))).thenReturn(userEntity);
+        when(this.userPortOut.save(any())).thenReturn(userEntity);
+        when(this.modelMapper.map(userEntity, UserResponseDto.class)).thenReturn(userResponseDto);
 
-        UserEntity savedUser = this.userService.registerUser(expectedUsername, expectedPassword);
+        UserResponseDto savedUser = this.userService.registerUser(expectedUsername, expectedPassword);
 
-        verify(this.userPortOut, times(1)).save(any(UserEntity.class));
+        verify(this.userPortOut, times(1)).save(any());
         assertNotNull(savedUser);
         assertEquals(expectedUsername, savedUser.getUsername());
-        assertEquals(encryptedPassword, savedUser.getPassword());
     }
 
     @Test
@@ -74,13 +80,16 @@ class UserServiceTest {
         var expectedPassword = "robbor_pass";
 
         UserEntity userEntity = new UserEntity(expectedUsername, expectedPassword);
+        UserResponseDto userResponseDto = new UserResponseDto(expectedUsername);
 
         when(this.userPortOut.findByUsername(any())).thenReturn(Optional.of(userEntity));
-        UserEntity user = this.userService.findByUsername(expectedUsername);
+        when(this.modelMapper.map(userEntity, UserResponseDto.class)).thenReturn(userResponseDto);
+
+        UserResponseDto user = this.userService.findByUsername(expectedUsername);
 
         verify(this.userPortOut, times(1)).findByUsername(expectedUsername);
         assertNotNull(user);
-        assertEquals(userEntity.getId(), user.getId());
+        assertEquals(expectedUsername, user.getUsername());
     }
 
     @Test
