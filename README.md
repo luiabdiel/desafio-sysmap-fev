@@ -95,6 +95,8 @@ Após o login, as requisições devem incluir o token JWT no cabeçalho `Authori
 
   **Atenção:**
   Para acessar o Mailtrap, recomendamos que você faça login na conta do Gmail primeiro e, em seguida, acesse o Mailtrap. Isso ocorre porque, ao tentar entrar diretamente com e-mail e senha, o Mailtrap pode solicitar um código de verificação. Como as credenciais do Mailtrap são as mesmas da conta do Gmail, basta logar no Gmail primeiro e depois acessar o Mailtrap normalmente.
+  
+  *O Google tem muitas configurações de segurança, mesmo que sem nenhuma verificação de duas etapas. Então, caso não consiga realizar o login, entre em contato que te ajudo a resolver isso.*
 
 ## 💍 Endpoints Principais
 
@@ -125,5 +127,5 @@ As evidências do projeto estão documentadas na [Wiki do repositório](https://
 
 ## 💡 Dúvidas ou sugestões?
 
-Entre em contato!
+Entre em contato! [LinkedIn](https://www.linkedin.com/in/luiabdiel/)
 
