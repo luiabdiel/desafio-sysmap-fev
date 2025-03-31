@@ -1,6 +1,8 @@
 package br.com.luiabdiel.ms_customer_v1.core.domain.application.service;
 
 import br.com.luiabdiel.ms_customer_v1.core.domain.entity.CustomerEntity;
+import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.dto.CustomerRequestDto;
+import br.com.luiabdiel.ms_customer_v1.core.domain.port.out.dto.CustomerResponseDto;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.kafka.producer.CustomerProducer;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.persistence.CustomerIntegrator;
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.DataIntegratyViolationException;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,56 +37,65 @@ class CustomerServiceTest {
     @Mock
     private CustomerIntegrator customerPortOut;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     @Test
     void shouldCreateCustomerSuccessfully() {
         var expectedId = 1L;
         var expectedName = "rob";
         var expectedEmail = "rob@email.com";
 
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto(
+                expectedName,
+                expectedEmail
+        );
         CustomerEntity customerEntity = new CustomerEntity(
+                expectedId,
+                expectedName,
+                expectedEmail
+        );
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto(
                 expectedId,
                 expectedName,
                 expectedEmail
         );
 
         when(this.customerPortOut.findByEmail(customerEntity.getEmail())).thenReturn(Optional.empty());
-        when(this.customerPortOut.save(customerEntity)).thenReturn(customerEntity);
+        when(this.modelMapper.map(customerRequestDto, CustomerEntity.class)).thenReturn(customerEntity);
+        when(this.customerPortOut.save(any())).thenReturn(customerEntity);
+        when(this.modelMapper.map(customerEntity, CustomerResponseDto.class)).thenReturn(customerResponseDto);
 
-        CustomerEntity createdCustomer = this.customerService.create(customerEntity);
+        CustomerResponseDto savedCustomer = this.customerService.create(customerRequestDto);
 
-        assertNotNull(createdCustomer);
+        assertNotNull(savedCustomer);
+        assertEquals(expectedId, savedCustomer.getId());
+        assertEquals(expectedName, savedCustomer.getName());
+        assertEquals(expectedEmail, savedCustomer.getEmail());
 
         verify(this.customerPortOut, times(1)).findByEmail(customerEntity.getEmail());
-        verify(this.customerPortOut, times(1)).save(
-                argThat(arg ->
-                        Objects.equals(expectedId, createdCustomer.getId()) &&
-                        Objects.equals(expectedName, createdCustomer.getName()) &&
-                        Objects.equals(expectedEmail, createdCustomer.getEmail())
-                )
-        );
+        verify(this.customerPortOut, times(1)).save(any());
         verify(this.customerProducer, times(1)).sendCustomer(any());
     }
 
     @Test
     void shouldThrowDataIntegratyViolationWhenEmailAlreadyRegistered() {
-        var expectedId = 1L;
         var expectedName = "rob";
         var expectedEmail = "rob@email.com";
 
-        CustomerEntity customerEntity = new CustomerEntity(
-                expectedId,
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto(
                 expectedName,
                 expectedEmail
         );
 
-        when(this.customerPortOut.findByEmail(customerEntity.getEmail())).thenReturn(Optional.of(new CustomerEntity()));
+        when(this.customerPortOut.findByEmail(customerRequestDto.getEmail())).thenReturn(Optional.of(new CustomerEntity()));
 
         DataIntegratyViolationException thrownException = assertThrows(DataIntegratyViolationException.class, () -> {
-            customerService.create(customerEntity);
+            customerService.create(customerRequestDto);
         });
 
         assertEquals("Email already registered", thrownException.getMessage());
-        verify(customerPortOut, times(1)).findByEmail(customerEntity.getEmail());
+        verify(customerPortOut, times(1)).findByEmail(customerRequestDto.getEmail());
         verify(customerPortOut, never()).save(any());
         verify(customerProducer, never()).sendCustomer(any());
     }

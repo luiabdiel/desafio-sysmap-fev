@@ -2,6 +2,8 @@ package br.com.luiabdiel.ms_customer_v1.core.domain.application.service;
 
 import br.com.luiabdiel.ms_customer_v1.core.domain.entity.CustomerEntity;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.CustomerPortIn;
+import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.dto.CustomerRequestDto;
+import br.com.luiabdiel.ms_customer_v1.core.domain.port.out.dto.CustomerResponseDto;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.kafka.event.CustomerEvent;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.kafka.event.EventType;
 import br.com.luiabdiel.ms_customer_v1.infrastructure.kafka.producer.CustomerProducer;
@@ -10,6 +12,7 @@ import br.com.luiabdiel.ms_customer_v1.shared.exceptions.DataIntegratyViolationE
 import br.com.luiabdiel.ms_customer_v1.shared.exceptions.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,15 +24,18 @@ public class CustomerService implements CustomerPortIn {
 
     private final CustomerProducer customerProducer;
     private final CustomerIntegrator customerPortOut;
+    private final ModelMapper modelMapper;
 
     @Override
-    public CustomerEntity create(CustomerEntity customerEntity) {
-        log.info("[PORT IN - CustomerService.create] - Criando cliente: {}", customerEntity.getEmail());
+    public CustomerResponseDto create(CustomerRequestDto customerRequestDto) {
+        log.info("[PORT IN - CustomerService.create] - Criando cliente: {}", customerRequestDto.getEmail());
          this.customerPortOut.
-                findByEmail(customerEntity.getEmail())
+                findByEmail(customerRequestDto.getEmail())
                 .ifPresent(x -> { throw new DataIntegratyViolationException("Email already registered"); });
 
-        CustomerEntity savedCustomer = this.customerPortOut.save(customerEntity);
+        CustomerEntity savedCustomer = this.customerPortOut.save(
+                this.modelMapper.map(customerRequestDto, CustomerEntity.class)
+        );
 
         this.customerProducer.sendCustomer(new CustomerEvent(
                 savedCustomer.getId(),
@@ -39,7 +45,7 @@ public class CustomerService implements CustomerPortIn {
         ));
 
         log.info("[PORT IN - CustomerService.create] - Cliente criado com sucesso: {}", savedCustomer.getId());
-        return savedCustomer;
+        return this.modelMapper.map(savedCustomer, CustomerResponseDto.class);
     }
 
     @Override

@@ -51,13 +51,13 @@ class CustomerControllerImplTest {
                 expectedName,
                 expectedEmail
         );
-        CustomerEntity customerEntity = new CustomerEntity(
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto(
                 expectedId,
                 expectedName,
                 expectedEmail
         );
 
-        when(this.customerPortIn.create(any())).thenReturn(customerEntity);
+        when(this.customerPortIn.create(any())).thenReturn(customerResponseDto);
 
         ResponseEntity<CustomerResponseDto> response = this.customerController.create(customerRequestDto);
 

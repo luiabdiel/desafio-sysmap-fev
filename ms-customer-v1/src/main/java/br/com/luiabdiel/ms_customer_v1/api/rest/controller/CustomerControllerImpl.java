@@ -28,11 +28,10 @@ public class CustomerControllerImpl implements CustomerController {
     @Override
     public ResponseEntity<CustomerResponseDto> create(@RequestBody @Valid CustomerRequestDto customerRequestDto) {
         log.info("[CONTROLLER - CustomerControllerImpl.create] - Criando cliente com email: {}", customerRequestDto.getEmail());
-        CustomerEntity customerEntity = this.modelMapper.map(customerRequestDto, CustomerEntity.class);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(this.customerPortIn.create(customerEntity).getId())
+                .buildAndExpand(this.customerPortIn.create(customerRequestDto).getId())
                 .toUri();
 
         log.info("[CONTROLLER - CustomerControllerImpl.create] - Cliente criado com sucesso.");
