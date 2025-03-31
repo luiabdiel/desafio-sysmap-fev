@@ -1,6 +1,5 @@
 package br.com.luiabdiel.ms_customer_v1.api.rest.controller;
 
-import br.com.luiabdiel.ms_customer_v1.core.domain.entity.CustomerEntity;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.CustomerPortIn;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.dto.CustomerRequestDto;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.out.dto.CustomerResponseDto;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,9 +32,6 @@ class CustomerControllerImplTest {
 
     @Mock
     private CustomerPortIn customerPortIn;
-
-    @Mock
-    private ModelMapper modelMapper;
 
     @Test
     void shouldCreateCustomerSuccessfully() {
@@ -71,13 +66,13 @@ class CustomerControllerImplTest {
         var expectedName = "rob";
         var expectedEmail = "rob@email.com";
 
-        CustomerEntity customerEntity = new CustomerEntity(
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto(
                 expectedId,
                 expectedName,
                 expectedEmail
         );
 
-        when(this.customerPortIn.findById(expectedId)).thenReturn(customerEntity);
+        when(this.customerPortIn.findById(expectedId)).thenReturn(customerResponseDto);
         ResponseEntity<CustomerResponseDto> response = this.customerController.findById(expectedId);
 
         verify(this.customerPortIn, times(1)).findById(any());

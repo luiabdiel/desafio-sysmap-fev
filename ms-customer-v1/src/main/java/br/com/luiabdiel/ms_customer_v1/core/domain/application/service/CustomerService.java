@@ -49,15 +49,17 @@ public class CustomerService implements CustomerPortIn {
     }
 
     @Override
-    public CustomerEntity findById(Long id) {
+    public CustomerResponseDto findById(Long id) {
         log.info("[PORT IN - CustomerService.findById] - Buscando cliente por ID: {}", id);
-        return this.
+         CustomerEntity customerEntity = this.
                 customerPortOut.
                 findById(id).
                 orElseThrow(() -> {
                     log.error("[PORT IN - CustomerService.findById] - Cliente não encontrado: {}", id);
                     return new ObjectNotFoundException("Customer not found");
                 });
+
+         return this.modelMapper.map(customerEntity, CustomerResponseDto.class);
     }
 
     @Override
@@ -71,7 +73,8 @@ public class CustomerService implements CustomerPortIn {
     @Override
     public CustomerResponseDto update(Long id, CustomerRequestDto customerRequestDto) {
         log.info("[PORT IN - CustomerService.update] - Atualizando cliente ID: {}", id);
-        CustomerEntity customer = this.findById(id);
+        CustomerResponseDto customerResponseDto = this.findById(id);
+        CustomerEntity customer = this.modelMapper.map(customerResponseDto, CustomerEntity.class);
 
         this.customerPortOut.
                 findByEmail(customerRequestDto.getEmail())
@@ -100,7 +103,8 @@ public class CustomerService implements CustomerPortIn {
     @Override
     public void deleteById(Long id) {
         log.info("[PORT IN - CustomerService.deleteById] - Excluindo cliente ID: {}", id);
-        CustomerEntity customerFromDb = this.findById(id);
+        CustomerResponseDto customerResponseDto = this.findById(id);
+        CustomerEntity customerFromDb = this.modelMapper.map(customerResponseDto, CustomerEntity.class);
 
         this.customerPortOut.deleteById(id);
         this.customerProducer.sendCustomer(new CustomerEvent(

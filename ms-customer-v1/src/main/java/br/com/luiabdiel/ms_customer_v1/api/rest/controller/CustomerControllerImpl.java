@@ -3,11 +3,9 @@ package br.com.luiabdiel.ms_customer_v1.api.rest.controller;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.CustomerPortIn;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.in.dto.CustomerRequestDto;
 import br.com.luiabdiel.ms_customer_v1.core.domain.port.out.dto.CustomerResponseDto;
-import br.com.luiabdiel.ms_customer_v1.core.domain.entity.CustomerEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +21,6 @@ import java.net.URI;
 public class CustomerControllerImpl implements CustomerController {
 
     private final CustomerPortIn customerPortIn;
-    private final ModelMapper modelMapper;
 
     @Override
     public ResponseEntity<CustomerResponseDto> create(@RequestBody @Valid CustomerRequestDto customerRequestDto) {
@@ -41,11 +38,10 @@ public class CustomerControllerImpl implements CustomerController {
     @Override
     public ResponseEntity<CustomerResponseDto> findById(@PathVariable(value = "id") Long id) {
         log.info("[CONTROLLER - CustomerControllerImpl.findById] - Buscando cliente por ID: {}", id);
-        CustomerEntity customerEntity = this.customerPortIn.findById(id);
-        CustomerResponseDto customerDto = this.modelMapper.map(customerEntity, CustomerResponseDto.class);
+        CustomerResponseDto customerResponseDto = this.customerPortIn.findById(id);
 
         log.info("[CONTROLLER - CustomerControllerImpl.findById] - Cliente encontrado com ID: {}", id);
-        return ResponseEntity.ok().body(customerDto);
+        return ResponseEntity.ok().body(customerResponseDto);
     }
 
     @Override
