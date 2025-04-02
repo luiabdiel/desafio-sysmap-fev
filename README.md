@@ -10,7 +10,7 @@ Todos os microsserviços possuem **100% de cobertura de testes unitários**, gar
 
 ## 🏠 Arquitetura
 
-O sistema utiliza a arquitetura **Vexa**, uma variação da arquitetura hexagonal desenvolvida pela Telefônica Vivo. Diferente da hexagonal tradicional, a Vexa permite o uso livre de anotações, como `@Service` na camada de serviço.
+O sistema utiliza uma variação da arquitetura hexagonal que permite o uso livre de anotações, como `@Service` na camada de serviço. Essa abordagem proporciona maior flexibilidade e organização na separação de responsabilidades dentro da aplicação.
 
 ## 👍 Fluxo de Comunicação
 
